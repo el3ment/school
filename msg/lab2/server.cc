@@ -6,7 +6,7 @@ Server::Server() {
     buf_ = new char[buflen_+1];
     messages_ = MessageMap();
 
-    sem_init(&lock, O_CREAT, 0600, 1);
+    sem_init(&lock, 0600, 1);
     sem_init(&numClientsWaiting, 0, 0);
     sem_init(&maxClientSpaces, 0, 1024);
 }
