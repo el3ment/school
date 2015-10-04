@@ -7,8 +7,8 @@ Server::Server() {
     messages_ = MessageMap();
 
     sem_init(&lock, O_CREAT, 0600, 1);
-    sem_init(numClientsWaiting, 0, 0);
-    sem_init(maxClientSpaces, 0, 1024);
+    sem_init(&numClientsWaiting, 0, 0);
+    sem_init(&maxClientSpaces, 0, 1024);
 }
 
 void *
