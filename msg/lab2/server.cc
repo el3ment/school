@@ -6,9 +6,9 @@ Server::Server() {
     buf_ = new char[buflen_+1];
     messages_ = MessageMap();
 
-    lock = sem_open("lock", O_CREAT, 0600, 1);
-    numClientsWaiting = sem_open("numClientsWaiting", O_CREAT, 0600, 0);
-    maxClientSpaces = sem_open("maxClientSpaces", O_CREAT, 0600, 1024);
+    sem_init(&lock, O_CREAT, 0600, 1);
+    sem_init(numClientsWaiting, 0, 0);
+    sem_init(maxClientSpaces, 0, 1024);
 }
 
 void *
@@ -82,8 +82,8 @@ Server::serve() {
 
 int
 Server::get_client(){
-    sem_wait(numClientsWaiting);
-    sem_wait(lock);
+    sem_wait(&numClientsWaiting);
+    sem_wait(&lock);
     int client = -1;
 
     if(status_ == 1){
@@ -91,21 +91,21 @@ Server::get_client(){
         clients_.pop();
     }
 
-    sem_post(lock);
-    sem_post(maxClientSpaces);
+    sem_post(&lock);
+    sem_post(&maxClientSpaces);
 
     return client;
 }
 
 void
 Server::push_client(int client){    
-    sem_wait(maxClientSpaces);
-    sem_wait(lock);
+    sem_wait(&maxClientSpaces);
+    sem_wait(&lock);
     
     clients_.push(client);
 
-    sem_post(lock);
-    sem_post(numClientsWaiting);
+    sem_post(&lock);
+    sem_post(&numClientsWaiting);
 }
 
 Server::Command

@@ -34,13 +34,13 @@ struct Message{
 
 class MessageMap {
 private:
-    sem_t* lock;
+    sem_t lock;
     map<string, vector<Message> > messages_;
 
 public:
     
     MessageMap(){
-        lock = sem_open("lock", O_CREAT, 0600, 1);
+        sem_init(&lock, 0, 1);
     }
     
     ~MessageMap(){
@@ -48,49 +48,49 @@ public:
     }
 
     int number_of_messages(string username){
-        sem_wait(lock);
+        sem_wait(&lock);
         
         int size = messages_[username].size();
         
-        sem_post(lock);
+        sem_post(&lock);
         
         return size;
     }
 
     Message get(string username, int index){
-        sem_wait(lock);
+        sem_wait(&lock);
 
         Message msg = messages_[username][index];
 
-        sem_post(lock);
+        sem_post(&lock);
 
         return msg;
     }
 
     void clear(){
-        sem_wait(lock);
+        sem_wait(&lock);
         
         messages_.clear();
 
-        sem_post(lock);
+        sem_post(&lock);
     }
 
     bool test(string username, int index){
-        sem_wait(lock);
+        sem_wait(&lock);
 
         bool test = index < messages_[username].size() and index >= 0;
 
-        sem_post(lock);
+        sem_post(&lock);
 
         return test;
     }
     
     void put(string username, Message message){
-        sem_wait(lock);
+        sem_wait(&lock);
 
         messages_[username].push_back(message);
 
-        sem_post(lock);
+        sem_post(&lock);
     }
 
 };
@@ -137,9 +137,9 @@ public:
     queue<int> clients_;
     int status_;
 
-    sem_t* lock;
-    sem_t* maxClientSpaces;
-    sem_t* numClientsWaiting;
+    sem_t lock;
+    sem_t maxClientSpaces;
+    sem_t numClientsWaiting;
 
 
 };
