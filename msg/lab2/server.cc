@@ -25,16 +25,13 @@ worker(void *vptr){
     Server* server = (Server*) vptr;
     int client;
 
-    uint64_t tid;
-    pthread_threadid_np(NULL, &tid);
-
     // If the get_client() function returns a -1, it means it's time to kill
     // the thread
     while((client = server->get_client()) > -1){
-        server->debug("got client - " + to_string(tid), client);
+        server->debug("got client", client);
         server->debug("waiting on command", client);
         Server::Command requestCommand = server->get_command(client);
-        server->debug("got command - " + requestCommand.command, client);
+        server->debug("got command" + requestCommand.command, client);
         if(requestCommand.command != ""){
 
             if(server->handle_command(client, requestCommand)){
@@ -56,11 +53,11 @@ worker(void *vptr){
             close(client);
         }
 
-        server->debug("waiting on client - " + to_string(tid));
+        server->debug("waiting on client");
         
     }
 
-    server->debug("killing worker - " + to_string(tid));
+    server->debug("killing worker");
 
     return 0;
 }
