@@ -144,10 +144,10 @@ Server::serve() {
 int
 Server::get_client(){
     debug("get_client waiting on clientsWaiting");
-    sem_wait(*numClientsWaiting);
+    sem_wait(&numClientsWaiting);
     debug("get_client got clientsWaiting");
     debug("get_client waiting on serverLock");
-    sem_wait(*serverLock);
+    sem_wait(&serverLock);
     debug("get_client got serverlock");
 
     int client = -1;
@@ -157,8 +157,8 @@ Server::get_client(){
         clients_.pop();
     }
 
-    sem_post(*serverLock);
-    sem_post(*maxClientSpaces);
+    sem_post(&serverLock);
+    sem_post(&maxClientSpaces);
 
     return client;
 }
@@ -166,16 +166,16 @@ Server::get_client(){
 void
 Server::push_client(int client){
     debug("push_client waiting on clientsSpaces");
-    sem_wait(*maxClientSpaces);
+    sem_wait(&maxClientSpaces);
     debug("push_client got clientsSpaces");
     debug("push_client waiting on serverLock");
-    sem_wait(*serverLock);
+    sem_wait(&serverLock);
     debug("push_client got serverLock");
     
     clients_.push(client);
 
-    sem_post(*serverLock);
-    sem_post(*numClientsWaiting);
+    sem_post(&serverLock);
+    sem_post(&numClientsWaiting);
 }
 
 Server::Command
