@@ -8,21 +8,23 @@ OBJS =			$(DEAMON) $(CLIENT)
 
 LIBS=
 
-CCFLAGS= -g
+CCFLAGS= -g -Wall
 
 all:	$(DEAMON) $(CLIENT)
+	$(CXX) -o msgd $(DEAMON) $(LIBS)
+	$(CXX) -o msg $(CLIENT) $(LIBS)
 
 deamon:$(DEAMON)
-	$(CXX) -o server $(DEAMON) $(LIBS)
+	$(CXX) -o msgd $(DEAMON) $(LIBS)
 
 client:$(CLIENT)
-	$(CXX) -o client $(CLIENT) $(LIBS)
+	$(CXX) -o msg $(CLIENT) $(LIBS)
 
 clean:
 	rm -f $(OBJS) $(OBJS:.o=.d)
 
 realclean:
-	rm -f $(OBJS) $(OBJS:.o=.d) server client
+	rm -f $(OBJS) $(OBJS:.o=.d) msgd msg
 
 
 # These lines ensure that dependencies are handled automatically.
