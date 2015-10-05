@@ -8,7 +8,7 @@ OBJS =			$(DEAMON) $(CLIENT)
 
 LIBS=
 
-CCFLAGS= -g
+CCFLAGS= -g -Wall
 
 all:	$(DEAMON) $(CLIENT)
 	$(CXX) -o msgd $(DEAMON) $(LIBS)
