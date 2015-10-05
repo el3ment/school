@@ -41,7 +41,7 @@ public:
     
     MessageMap(){
         //messageMapLock = sem_open("messageMapLockNew", O_CREAT, 0600, 1);
-        sem_init(messageMapLock, 0600, 1);
+        sem_init(*messageMapLock, 0600, 1);
     }
     
     ~MessageMap(){
@@ -49,59 +49,59 @@ public:
     }
 
     int number_of_messages(string username){
-        sem_wait(messageMapLock);
+        sem_wait(*messageMapLock);
         
         int size = messages_[username].size();
         
-        sem_post(messageMapLock);
+        sem_post(*messageMapLock);
         
         return size;
     }
 
     vector<Message> get(string username){
-        sem_wait(messageMapLock);
+        sem_wait(*messageMapLock);
 
         vector<Message> msgs = messages_[username];
 
-        sem_post(messageMapLock);
+        sem_post(*messageMapLock);
 
         return msgs;
     }
 
     Message get(string username, int index){
-        sem_wait(messageMapLock);
+        sem_wait(*messageMapLock);
 
         Message msg = messages_[username][index];
 
-        sem_post(messageMapLock);
+        sem_post(*messageMapLock);
 
         return msg;
     }
 
     void clear(){
-        sem_wait(messageMapLock);
+        sem_wait(*messageMapLock);
 
         messages_.clear();
 
-        sem_post(messageMapLock);
+        sem_post(*messageMapLock);
     }
 
     bool test(string username, int index){
-        sem_wait(messageMapLock);
+        sem_wait(*messageMapLock);
 
         bool test = index < messages_[username].size() and index >= 0;
 
-        sem_post(messageMapLock);
+        sem_post(*messageMapLock);
 
         return test;
     }
     
     void put(string username, Message message){
-        sem_wait(messageMapLock);
+        sem_wait(*messageMapLock);
 
         messages_[username].push_back(message);
 
-        sem_post(messageMapLock);
+        sem_post(*messageMapLock);
     }
 
 };
@@ -161,11 +161,11 @@ public:
     queue<int> clients_;
     int status_;
 
-    sem_t* serverLock;
-    sem_t* maxClientSpaces;
-    sem_t* numClientsWaiting;
-    sem_t* cacheLock;
-    sem_t* printLock;
+    sem_t serverLock;
+    sem_t maxClientSpaces;
+    sem_t numClientsWaiting;
+    sem_t cacheLock;
+    sem_t printLock;
 
 
 };

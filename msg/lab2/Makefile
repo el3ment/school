@@ -8,7 +8,7 @@ OBJS =			$(DEAMON) $(CLIENT)
 
 LIBS=
 
-CCFLAGS= -g -std=c++11 -Wall
+CCFLAGS= -g -pthread -std=c++11 -Wall
 
 all:	$(DEAMON) $(CLIENT)
 	$(CXX) -o msgd $(DEAMON) $(LIBS)

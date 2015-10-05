@@ -12,11 +12,11 @@ Server::Server() {
     // numClientsWaiting = sem_open("numClientsWaitingBlah", O_CREAT, 0600, 0);
     // maxClientSpaces = sem_open("maxClientSpacesBlah", O_CREAT, 0600, 1024);
 
-    sem_init(serverLock, 0600, 1);
-    sem_init(cacheLock, 0600, 1);
-    sem_init(printLock, 0600, 1);
-    sem_init(numClientsWaiting, 0600, 0);
-    sem_init(maxClientSpaces, 0600, 1024);
+    sem_init(*serverLock, 0600, 1);
+    sem_init(*cacheLock, 0600, 1);
+    sem_init(*printLock, 0600, 1);
+    sem_init(*numClientsWaiting, 0600, 0);
+    sem_init(*maxClientSpaces, 0600, 1024);
 
 }
 
@@ -69,9 +69,9 @@ Server::debug(string str){
 
 void
 Server::debug(string str, int client){
-    // sem_wait(printLock);
+    // sem_wait(*printLock);
     // cout << messages_.number_of_messages("user1") << " : " << client << " : " << str << endl;
-    // sem_post(printLock);
+    // sem_post(*printLock);
 }
 
 Server::~Server() {
@@ -80,20 +80,20 @@ Server::~Server() {
 
 void
 Server::setCache(int client, string content){
-    //sem_wait(cacheLock);
+    //sem_wait(*cacheLock);
 
     cache_[client] = content;
 
-    //sem_post(cacheLock);
+    //sem_post(*cacheLock);
 }
 
 string
 Server::getCache(int client){
-    //sem_wait(cacheLock);
+    //sem_wait(*cacheLock);
 
     string resp = cache_[client];
 
-    //sem_post(cacheLock);
+    //sem_post(*cacheLock);
 
     return resp;
 }
@@ -144,10 +144,10 @@ Server::serve() {
 int
 Server::get_client(){
     debug("get_client waiting on clientsWaiting");
-    sem_wait(numClientsWaiting);
+    sem_wait(*numClientsWaiting);
     debug("get_client got clientsWaiting");
     debug("get_client waiting on serverLock");
-    sem_wait(serverLock);
+    sem_wait(*serverLock);
     debug("get_client got serverlock");
 
     int client = -1;
@@ -157,8 +157,8 @@ Server::get_client(){
         clients_.pop();
     }
 
-    sem_post(serverLock);
-    sem_post(maxClientSpaces);
+    sem_post(*serverLock);
+    sem_post(*maxClientSpaces);
 
     return client;
 }
@@ -166,16 +166,16 @@ Server::get_client(){
 void
 Server::push_client(int client){
     debug("push_client waiting on clientsSpaces");
-    sem_wait(maxClientSpaces);
+    sem_wait(*maxClientSpaces);
     debug("push_client got clientsSpaces");
     debug("push_client waiting on serverLock");
-    sem_wait(serverLock);
+    sem_wait(*serverLock);
     debug("push_client got serverLock");
     
     clients_.push(client);
 
-    sem_post(serverLock);
-    sem_post(numClientsWaiting);
+    sem_post(*serverLock);
+    sem_post(*numClientsWaiting);
 }
 
 Server::Command
