@@ -34,7 +34,7 @@ struct Message{
 
 class MessageMap {
 private:
-    sem_t* messageMapLock;
+    sem_t messageMapLock;
     map<string, vector<Message> > messages_;
 
 public:
