@@ -12,11 +12,11 @@ Server::Server() {
     // numClientsWaiting = sem_open("numClientsWaitingBlah", O_CREAT, 0600, 0);
     // maxClientSpaces = sem_open("maxClientSpacesBlah", O_CREAT, 0600, 1024);
 
-    sem_init(*serverLock, 0600, 1);
-    sem_init(*cacheLock, 0600, 1);
-    sem_init(*printLock, 0600, 1);
-    sem_init(*numClientsWaiting, 0600, 0);
-    sem_init(*maxClientSpaces, 0600, 1024);
+    sem_init(&serverLock, 0600, 1);
+    sem_init(&cacheLock, 0600, 1);
+    sem_init(&printLock, 0600, 1);
+    sem_init(&numClientsWaiting, 0600, 0);
+    sem_init(&maxClientSpaces, 0600, 1024);
 
 }
 

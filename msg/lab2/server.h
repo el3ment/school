@@ -41,7 +41,7 @@ public:
     
     MessageMap(){
         //messageMapLock = sem_open("messageMapLockNew", O_CREAT, 0600, 1);
-        sem_init(*messageMapLock, 0600, 1);
+        sem_init(&messageMapLock, 0600, 1);
     }
     
     ~MessageMap(){
